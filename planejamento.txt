@@ -1,0 +1,17 @@
+-> Quem fizer 5 Gols primeiro ganha
+-> O jogador pode escolher chutar no meio, do lado esquerdo ou do lado direito
+-> Após a sua jogada a CPU tambem escolhe, e você tem que escolher qual lado deve defender 
+-> O loop é reiniciado até o final
+
+
+
+
+
+-> Função para jogador escolher  para onde irá chutar
+---> Função exibe opções, lê a opção do usuário, sorteia o número do adversario e retorna 0 ou 1, indicando se houve gol ou não
+
+-> Função para exibir o resultado do chute(Mensagem dizendo se acertou e mensagem dizendo se acertou ou se errou)
+---> Função que mostra o placar atual do jogo
+
+-> Função para Calcular um número aleatorio (recebe o tamanho máximo que pode ter)
+-> Função para simular o ataque da máquina 
