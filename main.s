@@ -21,6 +21,7 @@ main:
     	print("\nATAQUE DA FRANÇA,ESCOLHA ONDE IRÁ DEFENDER")
     	call opcoes_jogador
     	mv t0,a0
+        li a0,3 # Define o limite dos numeros sorteados
     	call sortear_numero
     	mv t1,a0
     	call resultado
