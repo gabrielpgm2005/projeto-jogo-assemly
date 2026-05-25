@@ -8,16 +8,14 @@ main:
     
     li s0,0 # S0 = GolsBrasil
     li s1,0 # s1 = GolsFranca
+    li s2, 0 # s2 = Posse atual, 0 representa posse do brasil e 1 posse da França
+    li s3,6 # s3 = Posição atual do jogador com a bola (começa no meio campo)
     loop_jogo:
-    	call opcoes_jogador # Lê o input do jogador e o retorna em a0
-    	mv t0,a0 # Salva o valor do input do usuario em t0
-    	li a0,3 # Define o limite dos numeros sorteados
-    	call sortear_numero # Escolhe aleatoriamente para onde a máquina vai e guarda em a0
-    	mv a1,t0 
-    	call resultado #retorna 0 caso não tenha gol, 1 se houve
-    	beqz a0,continua_jogador
-    	addi s0,s0,1
-    	continua_jogador:
+    	posse_jogador:
+    		call mostrar_opcoes # Mostra as opções de passe do usuário 
+    		call acao_player # Realiza a ação que o player digitar
+    		
+    		
     	print("\nATAQUE DA FRANÇA,ESCOLHA ONDE IRÁ DEFENDER")
     	call opcoes_jogador
     	mv t0,a0
