@@ -2,10 +2,6 @@
 #               DEFINICAO DAS FUNCOES
 #========================================================
 .text 
-	.globl apresentacao_inicial sleep limpar_tela 
-	.globl opcoes_jogador sortear_numero resultado mostrar_resultado
-	.globl mostrar_opcoes acao_player calculadora_de_probabilidade
-	.globl funcao_passe funcao_chute resultado_passe resultado_chute
 apresentacao_inicial:
 	push(ra)
 	print("\nBEM VINDO(A) AO INCRÍVEL SIMULADOR DE FINAL DE COPA DO MUNDO\n")
@@ -106,9 +102,9 @@ acao_player:
 	print("\nEscolha sua opção!\n")
 	li  a7, 5
 	ecall
-	mv s4,a0
-	bnez s4,passe
-	beqz s4,chute
+	mv t4,a0
+	bnez t4,passe
+	beqz t4,chute
 	
 	passe:
 		call funcao_passe
@@ -124,11 +120,11 @@ funcao_passe:
 	push(ra)
 	li a0,0 # Para as funções de Jogadores saberem que se trata de um passe
 	li t1,1
-	beq t0,t1,passe_goleiro
+	beq t3,t1,passe_goleiro
 	li t1,6
-	blt t0,t1,passe_zaga
+	blt t3,t1,passe_zaga
 	li t1,9
-	blt t0,t1,passe_meio_campo
+	blt t3,t1,passe_meio_campo
 	j passe_atacante
 	passe_goleiro:
 		call funcao_goleiro
@@ -156,16 +152,16 @@ funcao_chute:
 	j chute_atacante
 	chute_goleiro:
 		call funcao_goleiro
-		j fim_funcao_passe
+		j fim_funcao_chute
 	chute_zaga:
 		call funcao_zaga
-		j fim_funcao_passe
+		j fim_funcao_chute
 	chute_meio_campo:
 		call funcao_meio_campo
-		j fim_funcao_passe
+		j fim_funcao_chute
 	chute_atacante:
 		call funcao_atacante
-	fim_funcao_passe:
+	fim_funcao_chute:
 	pop(ra)
 	ret
 # Função que calcula probabilidades do tipo x/y
@@ -185,29 +181,28 @@ calculadora_de_probabilidade:
 	pop(ra)
 	ret
 resultado_passe:
-	beqz a0,acertou_passe
-	bnez a0,errou_passe
-	acertou_passe:
-		print("\nO PASSE FALHOU,A BOLA VAI PARA O TIME ADVERSARIO!\n")
-		li s2,1
-		j fim_resultado_passe
+	beqz a0,errou_passe
+	print("\nPasse Completo!\n")
+	mv t3,t4
+	li a0,0 # Retorna para o main o status de passe completo
+	j fim_resultado_passe
 	errou_passe:
-		print("\nPasse Completo!\n")
+		print("\nO PASSE FOI INTERCEPTADO, A POSSE PASSA PARA O TIME ADVERSÁRIO\n")
+		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_passe:
 	ret
 resultado_chute:
-	beqz a0,acertou_chute
-	bnez a0,errou_chute
-	acertou_chute:
-		print("\nGOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLL\n")
-		addi s1,s1,1
-		j fim_resultado_chute
+	beqz a0,errou_chute
+	print("\nGOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLL\n")
+	li a0,1 # Retorna para o main o status que ouve gol 
+	j fim_resultado_chute
 	errou_chute:
-		print("\n O GOLEIRO DEFENDEEE\n")
+		print("\n O GOLEIRO DEFENDEEE\nA BOLA FICA COM O ADVERSARIO\n")
+		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_chute:
 	ret
 		
-		
+
 	
 		
 	
