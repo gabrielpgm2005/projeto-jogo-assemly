@@ -1,19 +1,25 @@
 #========================================================================================
-# Implementação das funções que trabalham a lógica de jogada da frança
+# Implementaï¿½ï¿½o das funï¿½ï¿½es que trabalham a lï¿½gica de jogada da franï¿½a
 #========================================================================================
 
-.text
-	.globl franca_pressao
-	
+.text	
+# ============================== rodada franca 
+rodada_franca:
+	push(ra)
+	bgt s1, s0, franca_defesa
+	# empate ou perdendo faz pressao
+	j franca_pressao
+	pop(ra)
+	ret
 #=========================================================== franca pressao
 franca_pressao:
     push(ra)
     li t1, 1
-    beq s3, t1, private_pressao_goleiro
+    beq t3, t1, private_pressao_goleiro
     li t1, 6
-    blt s3, t1, private_pressao_zaga
+    blt t3, t1, private_pressao_zaga
     li t1, 9
-    blt s3, t1, private_pressao_meio_campo
+    blt t3, t1, private_pressao_meio_campo
     j private_pressao_atacante
 
     private_pressao_goleiro:
@@ -33,12 +39,12 @@ franca_pressao:
         private_pressao_goleiro_meio:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 5
+            addi t4, a0, 5
             j step_private_pressao_goleiro
         private_pressao_goleiro_ataque:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 8
+            addi t4, a0, 8
         step_private_pressao_goleiro:
             li a0, 0
             call funcao_goleiro
@@ -61,12 +67,12 @@ franca_pressao:
         private_pressao_zaga_meio:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 5
+            addi t4, a0, 5
             j step_private_pressao_zaga
         private_pressao_zaga_ataque:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 8
+            addi t4, a0, 8
         step_private_pressao_zaga:
             li a0, 0
             call funcao_zaga
@@ -89,12 +95,12 @@ franca_pressao:
         private_pressao_meio_campo_ataque:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 8
+            addi t4, a0, 8
             j step_private_pressao_meio_campo
         private_pressao_meio_campo_zaga:
             li a0, 4
             call sortear_numero
-            addi s4, a0, 1
+            addi t4, a0, 1
         step_private_pressao_meio_campo:
             li a0, 0
             call funcao_meio_campo
@@ -107,7 +113,7 @@ franca_pressao:
         bnez a0, private_pressao_atacante_chute
         li a0, 3
         call sortear_numero
-        addi s4, a0, 8
+        addi t4, a0, 8
         j step_private_pressao_atacante
         private_pressao_atacante_chute:
             li a0, 1
@@ -128,11 +134,11 @@ fim_franca_pressao:
 franca_defesa:
     push(ra)
     li t1, 1
-    beq s3, t1, private_defesa_goleiro
+    beq t3, t1, private_defesa_goleiro
     li t1, 6
-    blt s3, t1, private_defesa_zaga
+    blt t3, t1, private_defesa_zaga
     li t1, 9
-    blt s3, t1, private_defesa_meio_campo
+    blt t3, t1, private_defesa_meio_campo
     j private_defesa_atacante
 
     private_defesa_goleiro:
@@ -144,12 +150,12 @@ franca_defesa:
         private_defesa_goleiro_meio:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 5
+            addi t4, a0, 5
             j step_private_defesa_goleiro
         private_defesa_goleiro_zaga:
             li a0, 4
             call sortear_numero
-            addi s4, a0, 1
+            addi t4, a0, 1
         step_private_defesa_goleiro:
             li a0, 0
             call funcao_goleiro
@@ -164,12 +170,12 @@ franca_defesa:
         private_defesa_zaga_meio:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 5
+            addi t4, a0, 5
             j step_private_defesa_zaga
         private_defesa_zaga_tras:
             li a0, 4
             call sortear_numero
-            addi s4, a0, 1
+            addi t4, a0, 1
         step_private_defesa_zaga:
             li a0, 0
             call funcao_zaga
@@ -184,12 +190,12 @@ franca_defesa:
         private_defesa_meio_campo_ataque:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 8
+            addi t4, a0, 8
             j step_private_defesa_meio_campo
         private_defesa_meio_campo_zaga:
             li a0, 4
             call sortear_numero
-            addi s4, a0, 1
+            addi t4, a0, 1
         step_private_defesa_meio_campo:
             li a0, 0
             call funcao_meio_campo
@@ -204,12 +210,12 @@ franca_defesa:
         private_defesa_atacante_ataque:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 8
+            addi t4, a0, 8
             j step_private_defesa_atacante
         private_defesa_atacante_meio:
             li a0, 3
             call sortear_numero
-            addi s4, a0, 5
+            addi t4, a0, 5
         step_private_defesa_atacante:
             li a0, 0
             call funcao_atacante

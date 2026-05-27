@@ -14,10 +14,10 @@ main:
 	#inicio
 	li s0, 0 #gol BRA
 	li s1, 0 #gol FRA
-	li s2, 1 # posse (nesse caso começa com frança, main_franca)*************
+	li s2, 1 # posse (nesse caso comeï¿½a com franï¿½a, main_franca)*************
 	li s3, 6 #posicao inicial meio-campo
 	
-#ignorar o loop_jogo na hora de transferir, ele é específico pra frança
+#ignorar o loop_jogo na hora de transferir, ele ï¿½ especï¿½fico pra franï¿½a
 loop_jogo:
 	bne s2, x0, rodada_franca #se posse FRA, joga(foco nas jogadas da franca)
 	print("\n FRANCA PERDEU A POSSE, PROXIMA RODADA \n")

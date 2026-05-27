@@ -73,6 +73,10 @@ resultado:
 	step:
 		ret
 mostrar_resultado:
+	print("Minuto: ")
+	li a7,1
+	mv a0,s3
+	ecall
 	print("\n Brasil:")
 	mv a0,s0
 	li a7,1
@@ -166,6 +170,7 @@ funcao_chute:
 	ret
 # Função que calcula probabilidades do tipo x/y
 # a2 = x e a3 = y
+# Retorna 1 em caso de sucesso, 0 em caso de fracasso
 calculadora_de_probabilidade:
 	push(ra)
 	mv a0,a3
