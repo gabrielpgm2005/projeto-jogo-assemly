@@ -39,7 +39,7 @@ main:
     	
     	posse_maquina:
     		call mostrar_resultado
-    		print("FRANÇA COM A BOLA")
+    		print("FRANCA COM A POSSE DA BOLA")
     		li a0 3
     		call sleep
     		call limpar_tela
@@ -65,19 +65,19 @@ main:
 	j empate
 	vitoria_brasil:
 		call limpar_tela
-		print("\nO Hexa finalmente se encontra nas nossas mãos\n")
+		print("\nO Hexa finalmente se encontra nas nossas maos, o Brasil vai a loucura!!!! \n")
 		li a0,2
 		call sleep
 		j fim
 	vitoria_franca:
 		call limpar_tela
-		print("\nO Hexa finalmente se encontra nas nossas mãos\n")
+		print("\nO Perdemos mais uma vez o Hexa... Talvez na proxima vez. \n")
 		li a0,2
 		call sleep
 		j fim
 	empate:
 		call limpar_tela
-		print("\nDepois De um jogo épico, Mbappé e Neymar destroem o planeta em uma dividida e o jogo acaba!\n")
+		print("\nDepois De um jogo epico, Mbappe e Neymar destroem o planeta em uma dividida e o jogo acaba!\n")
 		li a0, 2
 		call sleep
 		j fim
