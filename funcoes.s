@@ -88,22 +88,16 @@ mostrar_resultado:
 	print(" Franca\n")
 	ret
 mostrar_opcoes:
-	print("\n(0) Chutar da posição atual\n")
-	print("\n(1) Alisson\n")
-	print("\n(2) Alex Sandro\n")
-	print("\n(3) Leo Pereira\n")
-	print("\n(4) Marquinhos\n")
-	print("\n(5) Danilo\n")
-	print("\n(6) Casemiro\n")
-	print("\n(7) Paqueta\n")
-	print("\n(8) Bruno Guimarães\n")
-	print("\n(9) Endrick\n")
-	print("\n(10) Neymar\n")
-	print("\n(11) Rayan\n")
+	print("\ Pressione 0 para chutar a bola da posicao atual\n")
+	print("\ Opcoes de passe abaixo\n")
+	print("\<Goleiro> n(1) Alisson\n")
+	print("\<Zagueiro> n(2) Alex Sandro // n(3) Leo Pereira // n(4) Marquinhos // n(5) Danilo \n")
+	print("\<Meio-Campo> n(6) Casemiro // n(7) Paqueta // n(8) Bruno Guimaraes \n")
+	print("\<Atacante>n(9) Endrick // n(10) Neymar // n(11) Rayan \n")
 	ret
 acao_player:
 	push(ra)
-	print("\nEscolha sua opção!\n")
+	print("\nEscolha se voce ira chutar ou pra quem ira fazer o passe!\n")
 	li  a7, 5
 	ecall
 	mv t4,a0
@@ -192,7 +186,7 @@ resultado_passe:
 	li a0,0 # Retorna para o main o status de passe completo
 	j fim_resultado_passe
 	errou_passe:
-		print("\nO PASSE FOI INTERCEPTADO, A POSSE PASSA PARA O TIME ADVERSÁRIO\n")
+		print("\nO PASSE FOI INTERCEPTADO, A POSSE AGORA EH DO TIME ADVERSÁRIO\n")
 		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_passe:
 	ret
@@ -202,7 +196,7 @@ resultado_chute:
 	li a0,1 # Retorna para o main o status que ouve gol 
 	j fim_resultado_chute
 	errou_chute:
-		print("\n O GOLEIRO DEFENDEEE\nA BOLA FICA COM O ADVERSARIO\n")
+		print("\n O GOLEIRO DEFENDEEE\nO ADVERSARIO TOMA POSSE DA BOLA\n")
 		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_chute:
 	ret
