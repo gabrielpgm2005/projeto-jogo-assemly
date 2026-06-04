@@ -51,19 +51,6 @@ sortear_numero:
 	
 	addi a0,a0,1
 	ret
-resultado:
-
-	beq a0,a1,acertou
-	bne a0,a1,errou
-	acertou:
-		print("\nGOOOOOOLLLLL\n")
-		li a0,1
-		j step
-	errou:
-		print("O GOLEIRO ACERTOU O LADO")
-		li a0,0
-	step:
-		ret
 mostrar_resultado:
 	print("Minuto: ")
 	li a7,1
@@ -139,11 +126,11 @@ funcao_chute:
 	push(ra)
 	li a0,1 # Para as funções de Jogadores saberem que se trata de um chute
 	li t1,1
-	beq t0,t1,chute_goleiro
+	beq t3,t1,chute_goleiro
 	li t1,6
-	blt t0,t1,chute_zaga
+	blt t3,t1,chute_zaga
 	li t1,9
-	blt t0,t1,chute_meio_campo
+	blt t3,t1,chute_meio_campo
 	j chute_atacante
 	chute_goleiro:
 		call funcao_goleiro
@@ -221,7 +208,7 @@ resultado_chute:
 	li a0,1 # Retorna para o main o status que ouve gol 
 	j fim_resultado_chute
 	errou_chute:
-		print("\n O GOLEIRO DEFENDEEE\nO ADVERSARIO TOMA POSSE DA BOLA\n")
+		print("\n O GOLEIRO DEFENDEEE\nA BOLA É DO ADVERSÁRIO\n")
 		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_chute:
 	pop(ra)
@@ -252,8 +239,17 @@ mostrar_posicao_atual:
     	ecall
 
     	ret
-
-	
+mostrar_resultado_penalti:
+	print("\nPENALIDADES\n")
+	print("Brasil: ")
+	li a7,1	
+	mv a0,s0
+	ecall
+	print(" x França : ")
+	li a7,1
+	mv a0,s1
+	ecall
+	ret
 		
 	
 	

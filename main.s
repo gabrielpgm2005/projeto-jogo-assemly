@@ -56,7 +56,6 @@ tabela_franca:
 
 .include "macros.s"
 main:
-
     call apresentacao_inicial
     call limpar_tela
     
@@ -95,7 +94,7 @@ main:
     	posse_maquina:
     		li s2,1
     		call mostrar_resultado
-    		print("FRANCA COM A POSSE DA BOLA")
+    		print("FRANCA COM A BOLA")
     		li a0 3
     		call sleep
     		call limpar_tela
@@ -118,7 +117,61 @@ main:
     	fim_loop:	
 	bgt s0,s1,vitoria_brasil
 	blt s0,s1,vitoria_franca
-	j empate
+	li t3,11
+	#Redefinindo os gols dos times para contar os resultados dos penaltis
+	li s0, 0 
+	li s1,0
+	li t5,0 # t5 = Penaltis batidos, se for maior que 5 começa a tratar como batidas alternadas
+	
+	loop_penalti:
+		call mostrar_resultado_penalti
+		li a0,2
+		call sleep
+		penalti_brasil:
+			li s2,0 #Muda posse para o brasil
+			mv a0,t3 #bota a posicao atual como parametro da função mostrar_posicao_atual
+			call mostrar_posicao_atual
+			print(" Com a bola!\n")
+			li a2,7
+			li a3,8
+			call calculadora_de_probabilidade
+			call resultado_chute
+			li t0,1
+			bne t0,a0,penalti_franca
+			addi s0,s0,1
+		penalti_franca:
+			li s2,1
+			mv a0,t3
+			call mostrar_posicao_atual
+			print(" Com a bola!\n")
+			li a2,1
+			li a3,2
+			call calculadora_de_probabilidade
+			call resultado_chute
+			li t0,1
+			bne t0,a0,step_penalti
+			addi s1,s1,1
+		step_penalti:
+			#Aumenta o contador de rodadas de penalti
+			addi t5,t5,1
+			
+			#Atualiza os jogadores que vão chutar
+			addi t0, t3, 9
+			li   t1, 11
+			rem  t0, t0, t1
+			addi t3, t0, 1
+			
+			# Se menos de 5 rodadas de penaltis foram batidas, retorna ao loop
+			li t0,5
+			blt t5,t0,loop_penalti
+			
+			# Verifica quem venceu, se continua empatado chama o loop mais uma vez
+			bgt s0,s1,vitoria_brasil
+			bgt s1,s0,vitoria_franca
+			j loop_penalti
+			
+		
+				
 	vitoria_brasil:
 		call limpar_tela
 		print("\nO Hexa finalmente se encontra nas nossas maos, o Brasil vai a loucura!!!! \n")
@@ -129,12 +182,6 @@ main:
 		call limpar_tela
 		print("\nO Perdemos mais uma vez o Hexa... Talvez na proxima vez. \n")
 		li a0,2
-		call sleep
-		j fim
-	empate:
-		call limpar_tela
-		print("\nDepois De um jogo epico, Mbappe e Neymar destroem o planeta em uma dividida e o jogo acaba!\n")
-		li a0, 2
 		call sleep
 		j fim
 	fim:
