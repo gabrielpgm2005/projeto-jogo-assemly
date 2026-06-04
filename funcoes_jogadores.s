@@ -16,15 +16,18 @@ funcao_goleiro:
 		blt t4,t1,private_passe_goleiro_meio_campo
 		j private_passe_goleiro_atacante
 		private_passe_goleiro_goleiro:
-			j fim_funcao_goleiro
-		private_passe_goleiro_zaga:
 			li a2,3
 			li a3,4
 			call calculadora_de_probabilidade
 			j step_private_passe_goleiro
-		private_passe_goleiro_meio_campo:
+		private_passe_goleiro_zaga:
 			li a2,1
 			li a3,2
+			call calculadora_de_probabilidade
+			j step_private_passe_goleiro
+		private_passe_goleiro_meio_campo:
+			li a2,1
+			li a3,3
 			call calculadora_de_probabilidade
 			j step_private_passe_goleiro
 		private_passe_goleiro_atacante:
@@ -57,20 +60,23 @@ funcao_zaga:
 		blt t4,t1,private_passe_zaga_meio_campo
 		j private_passe_zaga_atacante
 		private_passe_zaga_goleiro:
+			li a2,1
+			li a3,2
+			call calculadora_de_probabilidade
+			j step_private_passe_zaga
+		private_passe_zaga_zaga:
 			li a2,3
 			li a3,4
 			call calculadora_de_probabilidade
 			j step_private_passe_zaga
-		private_passe_zaga_zaga:
-			j fim_funcao_zaga
 		private_passe_zaga_meio_campo:
-			li a2,3
+			li a2,1
 			li a3,4
 			call calculadora_de_probabilidade
 			j step_private_passe_zaga
 		private_passe_zaga_atacante:
 			li a2,1
-			li a3,2
+			li a3,7
 			call calculadora_de_probabilidade
 		step_private_passe_zaga:
 		call resultado_passe
@@ -98,18 +104,19 @@ funcao_meio_campo:
 		j private_passe_meio_campo_atacante
 		private_passe_meio_campo_goleiro:
 			li a2,1
-			li a3,2
+			li a3,3
 			call calculadora_de_probabilidade
 			j step_private_passe_meio_campo
 		private_passe_meio_campo_zaga:
-			li a2,3
-			li a3,4
+			li a2,1
+			li a3,2
 			call calculadora_de_probabilidade
 			j step_private_passe_meio_campo
 		private_passe_meio_campo_meio_campo:
-			j fim_funcao_meio_campo
+			li a0,1
+			j step_private_passe_meio_campo
 		private_passe_meio_campo_atacante:
-			li a2,3
+			li a2,1
 			li a3,4
 			call calculadora_de_probabilidade
 		step_private_passe_meio_campo:
@@ -143,22 +150,23 @@ funcao_atacante:
 			j step_private_passe_atacante
 		private_passe_atacante_zaga:
 			li a2,1
-			li a3,2
+			li a3,5
 			call calculadora_de_probabilidade
 			j step_private_passe_atacante
 		private_passe_atacante_meio_campo:
-			li a2,3
-			li a3,4
+			li a2,1
+			li a3,3
 			call calculadora_de_probabilidade
 			j step_private_passe_atacante
 		private_passe_atacante_atacante:
-			j fim_funcao_atacante
+			li a0,1
+			j step_private_passe_atacante
 		step_private_passe_atacante:
 			call resultado_passe
 			j fim_funcao_atacante
 	private_chute_atacante:
-		li a2,3
-		li a3,4
+		li a2,1
+		li a3,2
 		call calculadora_de_probabilidade
 		call resultado_chute
 	fim_funcao_atacante:

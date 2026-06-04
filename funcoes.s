@@ -32,14 +32,6 @@ limpar_tela:
 	    bnez t0, loop_limpa_tela
 	ret
 	    
-opcoes_jogador:
-	print("\nPressione (1) para escolher o lado direito\n")
-	print("\nPressione (2) para escolher o meio\n")
-	print("\nPressione (3) para escolher o lado esquerdo\n")
-	li a7,5
-	ecall
-	ret
-	
 sortear_numero:
 
 	mv t0,a0 # Salva o limite em t0
@@ -88,12 +80,17 @@ mostrar_resultado:
 	print(" Franca\n")
 	ret
 mostrar_opcoes:
+	push(ra)
 	print("\ Pressione 0 para chutar a bola da posicao atual\n")
 	print("\ Opcoes de passe abaixo\n")
 	print("\<Goleiro> n(1) Alisson\n")
 	print("\<Zagueiro> n(2) Alex Sandro // n(3) Leo Pereira // n(4) Marquinhos // n(5) Danilo \n")
 	print("\<Meio-Campo> n(6) Casemiro // n(7) Paqueta // n(8) Bruno Guimaraes \n")
 	print("\<Atacante>n(9) Endrick // n(10) Neymar // n(11) Rayan \n")
+	print("A bola está com: ")
+	mv a0,t3
+	call mostrar_posicao_atual
+	pop(ra)
 	ret
 acao_player:
 	push(ra)
@@ -180,27 +177,81 @@ calculadora_de_probabilidade:
 	pop(ra)
 	ret
 resultado_passe:
+	push(ra)
+	beq t3,t4,cera
 	beqz a0,errou_passe
 	print("\nPasse Completo!\n")
+	mv a0,t3
+	call mostrar_posicao_atual
+	print(" Passou a bola para ")
+	mv a0,t4
+	call mostrar_posicao_atual
+	print("\n")
 	mv t3,t4
+	j fim_cera
+	cera:
+		beqz a0,errou_cera
+		mv a0,t3
+		call mostrar_posicao_atual
+		beqz a0,errou_cera
+		print(" Segura a bola e faz cera!\n")
+		j fim_cera
+		errou_cera:
+			print(" Tentou fazer cera, mas perdeu a bola!\n")
+			li a0,2
+			j fim_resultado_passe
+	fim_cera:
 	li a0,0 # Retorna para o main o status de passe completo
 	j fim_resultado_passe
 	errou_passe:
-		print("\nO PASSE FOI INTERCEPTADO, A POSSE AGORA EH DO TIME ADVERSÁRIO\n")
+		mv a0,t3
+		call mostrar_posicao_atual
+		print(" PERDDE A BOLA, A POSSE VAI PARA O TIME ADVERSÁRIO!\n")
 		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_passe:
+	pop(ra)
 	ret
 resultado_chute:
+	push(ra)
 	beqz a0,errou_chute
 	print("\nGOOOOOOOOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLL\n")
+	mv a0,t3
+	call mostrar_posicao_atual
+	print(" Marca!\n")
 	li a0,1 # Retorna para o main o status que ouve gol 
 	j fim_resultado_chute
 	errou_chute:
 		print("\n O GOLEIRO DEFENDEEE\nO ADVERSARIO TOMA POSSE DA BOLA\n")
 		li a0,2 # Retorna para o main o status que ouve troca de posse
 	fim_resultado_chute:
+	pop(ra)
 	ret
-		
+# Mostra o nome do jogador que está na posição que foi passada como parâmetro em a0, cuida tanto para o Brasil
+#Quanto para a França
+mostrar_posicao_atual:
+	addi a0,a0,-1
+
+    # escolhe qual tabela usar
+    beqz s2, mostrar_posicao_atual_brasil
+
+	mostrar_posicao_atual_franca:
+    		la t1, tabela_franca
+    		j mostrar_posicao_atual_continua
+
+	mostrar_posicao_atual_brasil:
+    		la t1, tabela_brasil
+
+	mostrar_posicao_atual_continua:
+
+    	# cada entrada da tabela ocupa 4 bytes
+    	slli t0, a0, 2
+    	add t1, t1, t0
+    
+    	lw a0, 0(t1)
+    	li a7, 4
+    	ecall
+
+    	ret
 
 	
 		
