@@ -67,99 +67,172 @@ main:
     li t4, 0 # t4 = Posição alvo de passe,0 indica chute ao gol
     loop_jogo:
     	posse_jogador:
-    		li s2,0
+    		#Troca a posse para o brasil
+    		li s2,0 
+    		
+    		#Mostra os resultados por 3 segundos e limpa a tela
     		call mostrar_resultado
     		li a0 3
     		call sleep
     		call limpar_tela
-    		addi s3,s3,1
+    		
+    		#Adiciona um minuto ao contador de minutos e se for maior que 90 termina o loop
+    		addi s3,s3,1 
     		li t0,90
-    		bgt s3,t0,fim_loop
-    		call mostrar_opcoes # Mostra as opções de passe do usuário 
-    		call acao_player # Realiza a ação que o player digitar
-    		#retorna 0 caso passe completo, 1 caso gol,2 caso passe incompleto ou chute falhou
+    		bgt s3,t0,fim_loop 
+    		
+    		#Mostra as opções para o player
+    		call mostrar_opcoes  
+    		
+    		#Lê qual opção o player escolheu e retorna em a0 o resultado dela
+    		#0 em caso de passe completo,1 em caso de gol e 2 em caso de passe incompleto/chute falho
+    		call acao_player 
+    		
+    		# volta ao loop do jogador caso seja um passe completo (a0 = 0)
     		beqz a0,posse_jogador
-    		mv t2,a0 # Salva o status de saida de posse do jogador em t2
+    		
+    		#Troca o jogador que está com a bola para um aleatório
+    		mv t2,a0 
     		li a0,11
     		call sortear_numero
-    		mv t3,a0
+    		mv t3,a0 
+    		
+    		#Verifica se foi gol
     		li t0,1
-    		beq t2,t0,posse_jogador_gol
+    		beq t2,t0,posse_jogador_gol 
+    		
+    		#Verifica se foi chute falho/passe incompleto
     		li t0,2
-    		beq t2,t0,posse_maquina
+    		beq t2,t0,posse_maquina 
+    		
+    		#Atualiza o placar e passa a posse para a máquina
     		posse_jogador_gol:
     			addi s0,s0,1
     			j posse_maquina
     	
     	posse_maquina:
-    		li s2,1
+    		#troca de posse para a frança
+    		li s2,1 
+    		
+    		#Mostra o placar por 3 segundos e limpa a tela
     		call mostrar_resultado
     		print("FRANCA COM A BOLA")
     		li a0 3
     		call sleep
     		call limpar_tela
+    		
+    		#Adiciona 1 ao tempo e caso seja maior que 90 minutos encerra o loop
     		addi s3,s3,1
     		li t0,90
     		bgt s3,t0,fim_loop
+    		
+    		#Chama a função que trata de qual ação a máquina vai tomar e retorna o resultado dessa ação
+    		#Os possveis retornos são os mesmos usados para o brasil
     		call rodada_franca
+    		
+    		#Volta ao loop para frança indicando passe completo
     		beqz a0,posse_maquina
-    		mv t2,a0 # Salva o status de saida de posse_maquina em t2
+    		
+    		#Troca o jogador que tem a bola para um jogador aleatório
+    		mv t2,a0 
     		li a0,11
     		call sortear_numero
-    		mv t3,a0
+    		mv t3,a0 
+    		
+    		#Verifica se foi gol
     		li t0,1
     		beq t2,t0,posse_maquina_gol
+    		
+    		#Verifica se foi passe incompleto/chute falho e retorna para a posse do player
     		li t0,2
     		beq t2,t0,posse_jogador
+    		
+    		#atualiza o placar
     		posse_maquina_gol:
     			addi s1,s1,1
     			j posse_jogador
     	fim_loop:	
+    	
+    	#Checa se algum venceu 
 	bgt s0,s1,vitoria_brasil
 	blt s0,s1,vitoria_franca
-	li t3,11
+	#O penalti começa no jogador numero 11
+	li t3,11 
+	
 	#Redefinindo os gols dos times para contar os resultados dos penaltis
 	li s0, 0 
 	li s1,0
-	li t5,0 # t5 = Penaltis batidos, se for maior que 5 começa a tratar como batidas alternadas
+	
+	#t5 representa o numero de rodadas de penalti batidas, para verificar se ainda esta nos 5 primeiros
+	li t5,0 
 	
 	loop_penalti:
+	
+		#Mostra o resultado atual dos penaltis por 2 segundos e limpa a tela 
 		call mostrar_resultado_penalti
 		li a0,2
 		call sleep
+		
 		penalti_brasil:
-			li s2,0 #Muda posse para o brasil
-			mv a0,t3 #bota a posicao atual como parametro da função mostrar_posicao_atual
+		
+			#Muda posse para o brasil
+			li s2,0 
+			
+			#Pausa o jogo por 2 segundos
+			li a0,2
+			call sleep
+			
+			#Mostra uma mensagem com o nome do jogador que vai bater
+			mv a0,t3 
 			call mostrar_posicao_atual
 			print(" Com a bola!\n")
-			li a2,7
-			li a3,8
+			
+			#define a probabilidade de acerto do penalti
+			li a2,1
+			li a3,2
 			call calculadora_de_probabilidade
+			
+			#Mostra o resultado do chute e pula para a vez da franca se errou
 			call resultado_chute
 			li t0,1
 			bne t0,a0,penalti_franca
 			addi s0,s0,1
+			
 		penalti_franca:
+			#Muda a posse para a frança
 			li s2,1
+			
+			#Pausa o jogo por 2 segundos
+			li a0,2
+			call sleep
+			
+			#Mostra uma mensagem com o nome do jogador com a bola 
 			mv a0,t3
 			call mostrar_posicao_atual
 			print(" Com a bola!\n")
+			
+			#Define a probabilidade de acerto do penalti
 			li a2,1
 			li a3,2
 			call calculadora_de_probabilidade
 			call resultado_chute
+			
+			#verifica o resultado, se acertou incrementa 1,=
 			li t0,1
 			bne t0,a0,step_penalti
 			addi s1,s1,1
+			
 		step_penalti:
+		
 			#Aumenta o contador de rodadas de penalti
 			addi t5,t5,1
 			
 			#Atualiza os jogadores que vão chutar
-			addi t0, t3, 9
-			li   t1, 11
-			rem  t0, t0, t1
-			addi t3, t0, 1
+			#formula = atual%11 + 1
+			li t1,11
+			rem t0,t3,t1
+			li t1,1
+			add t3,t0,t1
 			
 			# Se menos de 5 rodadas de penaltis foram batidas, retorna ao loop
 			li t0,5
